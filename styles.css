@@ -328,10 +328,10 @@ a { color: var(--violet); }
 
 /* The lobby: level choice and the demo board. */
 .levels .pick-side { padding-block: .7rem .55rem; }
-.pick-side small { font-size: .74rem; font-weight: 600; color: var(--ink-soft); }
+.pick-side small { font-size: .76rem; font-weight: 600; line-height: 1.3; text-align: center; color: var(--ink-soft); }
 .level-dots {
   --peg: .82rem; display: flex; flex-wrap: wrap; justify-content: center; gap: 3px;
-  inline-size: 4.4rem; padding: .35rem; border-radius: 10px; background: var(--tray);
+  inline-size: calc(4 * var(--peg) + 9px + .7rem); padding: .35rem; border-radius: 10px; background: var(--tray);
 }
 .tray.demo { --peg: clamp(1.7rem, 5vw, 2.4rem); max-inline-size: 21rem; }
 .tray.demo .row:nth-child(n + 5) { opacity: .55; }
