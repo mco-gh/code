@@ -478,3 +478,8 @@ dialog.sheet[open] { display: grid; gap: .9rem; }
 
 .theme-swatch { display: inline-flex; align-items: center; gap: 3px; padding: .3rem .45rem; border-radius: 999px; background: var(--tray); }
 .theme-swatch i { inline-size: .62rem; block-size: .62rem; border-radius: 50%; box-shadow: 0 0 0 1px rgb(0 0 0 / .3); }
+
+/* Copyright notice at the foot of the page. */
+.copyright { margin: 0; padding: 1.5rem 1rem calc(1.5rem + env(safe-area-inset-bottom, 0px)); text-align: center; font-size: 0.8rem; color: var(--ink-soft); }
+/* Only on the start screen: during a game or call the main view fills the window. */
+body:has(#lobby[hidden]) .copyright { display: none; }
