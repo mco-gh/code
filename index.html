@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>MM — crack the code, wherever you are</title>
+  <title>Code — crack the code, wherever you are</title>
   <meta name="description" content="A code-breaking race for two. Hide a code of colored pegs, then crack your friend's before they crack yours. No sign-up, peer to peer, with optional video and chat.">
   <meta name="color-scheme" content="light">
-  <script>try { const s = localStorage.getItem('mm-scheme'); if (s === 'dark' || s === 'light dark') document.querySelector('meta[name="color-scheme"]').content = s; } catch {}</script>
+  <script>try { const s = localStorage.getItem('code-scheme') ?? localStorage.getItem('mm-scheme'); if (s === 'dark' || s === 'light dark') document.querySelector('meta[name="color-scheme"]').content = s; } catch {}</script>
   <meta name="theme-color" content="#fff4e4" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#17122b" media="(prefers-color-scheme: dark)">
   <link rel="icon" href="./icon.svg" type="image/svg+xml">
@@ -32,12 +32,12 @@
           <circle cx="20" cy="27" r="4.200" style="fill: var(--c5)"/>
           <circle cx="28" cy="27" r="4.200" style="fill: var(--c6)"/>
         </svg>
-        <span>MM</span>
+        <span>Code</span>
       </a>
       <p class="credit">Made with ❤️ by <a href="https://mco.dev/">Marc</a><a class="apps-link" href="https://mco.dev/apps/"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.5"/></svg>All apps</a></p>
     </div>
     <div class="top-actions">
-      <button class="icon-btn" type="button" command="show-modal" commandfor="info" aria-label="About MM">
+      <button class="icon-btn" type="button" command="show-modal" commandfor="info" aria-label="About Code">
         <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.500v.010"/></svg>
       </button>
       <button class="icon-btn" type="button" command="show-modal" commandfor="settings" aria-label="Settings">
@@ -215,7 +215,7 @@
 
   <!-- ───────────── Info ───────────── -->
   <dialog id="info" class="sheet wide" aria-labelledby="info-title" closedby="any">
-    <h2 id="info-title">About MM</h2>
+    <h2 id="info-title">About Code</h2>
     <p>A code-breaking race for two people, wherever they are. There are no accounts, no ads and no saved games: just pegs, logic and a friend.</p>
 
     <h3>Starting a game</h3>
@@ -239,7 +239,7 @@
     <p>Your code never leaves your browser while the round is on: your browser scores your opponent’s guesses itself. Before guessing starts, each browser sends a fingerprint (a SHA-256 hash) of its code; at the end the codes are revealed and checked against the fingerprints and every score given, so nobody can change their code or fib about a score.</p>
 
     <h3>Privacy</h3>
-    <p>MM is a static page. A public <a href="https://peerjs.com/" target="_blank" rel="noopener">PeerJS</a> server introduces your two browsers using the game code; after that, guesses, chat, video and audio travel directly between you over WebRTC. Nothing is recorded, and only your settings are saved, in this browser.</p>
+    <p>Code is a static page. A public <a href="https://peerjs.com/" target="_blank" rel="noopener">PeerJS</a> server introduces your two browsers using the game code; after that, guesses, chat, video and audio travel directly between you over WebRTC. Nothing is recorded, and only your settings are saved, in this browser.</p>
 
     <div class="sheet-actions">
       <button class="btn primary" type="button" data-close autofocus>Got it</button>

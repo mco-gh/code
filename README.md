@@ -1,6 +1,6 @@
-# MM
+# Code
 
-A peer-to-peer code-breaking race for two, played in the browser at [mco.dev/mm](https://mco.dev/mm/).
+A peer-to-peer code-breaking race for two, played in the browser at [mco.dev/code](https://mco.dev/code/).
 
 Each player hides a secret row of colored pegs, then both race to crack the other's code. Every guess is scored with exact pegs (right color, right place) and close pegs (right color, wrong place). Fewest tries wins.
 
@@ -22,12 +22,12 @@ was given. A mismatch is shown on the result card.
 Each player's round (including their code) is kept in `sessionStorage`, so a guest can
 reload mid-round and carry on.
 
-This repo is mounted in [mco-gh/mco.dev](https://github.com/mco-gh/mco.dev) as a git submodule at `static/mm`. After pushing a change here, update the submodule pointer there to publish it:
+This repo is mounted in [mco-gh/mco.dev](https://github.com/mco-gh/mco.dev) as a git submodule at `static/code`. After pushing a change here, update the submodule pointer there to publish it:
 
 ```bash
 cd mco.dev
-git submodule update --remote static/mm
-git commit -am "Update mm"
+git submodule update --remote static/code
+git commit -am "Update code"
 git push
 ```
 

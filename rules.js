@@ -1,4 +1,4 @@
-// The rules of MM, a code-breaking game for two. Each player hides a code of
+// The rules of Code, a code-breaking game for two. Each player hides a code of
 // colored pegs; both then race to crack the other's. Every guess is scored with
 // "exact" pegs (right color, right place) and "close" pegs (right color, wrong
 // place). Whoever cracks their opponent's code in fewer tries wins.

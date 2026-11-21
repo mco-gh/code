@@ -1,4 +1,4 @@
-// MM: the page logic. rules.js knows the game, pegs.js draws, net.js connects;
+// Code: the page logic. rules.js knows the game, pegs.js draws, net.js connects;
 // this file runs the lobby, the rounds, chat, video and settings.
 import * as Rules from './rules.js';
 import { peg, keys, row, slot } from './pegs.js';
@@ -18,7 +18,7 @@ const THEMES = {
 
 function loadLook() {
   try {
-    const saved = JSON.parse(localStorage.getItem('mm-look'));
+    const saved = JSON.parse(localStorage.getItem('code-look') ?? localStorage.getItem('mm-look'));
     if (saved && THEMES[saved.theme]) return { theme: saved.theme, symbols: Boolean(saved.symbols) };
   } catch {}
   return { theme: 'Carnival', symbols: false };
@@ -36,7 +36,7 @@ function applyLook(save = false) {
   document.documentElement.classList.toggle('symbols', look.symbols);
   $('symbols').checked = look.symbols;
   for (const button of $('theme-list').children) button.setAttribute('aria-pressed', String(button.dataset.theme === look.theme));
-  if (save) try { localStorage.setItem('mm-look', JSON.stringify(look)); } catch {}
+  if (save) try { localStorage.setItem('code-look', JSON.stringify(look)); } catch {}
 }
 
 for (const [name, theme] of Object.entries(THEMES)) {
@@ -90,7 +90,7 @@ function newRound(id, key) {
   };
 }
 
-const roundKey = () => `mm-round-${code}`;
+const roundKey = () => `code-round-${code}`;
 function saveRound() {
   try { sessionStorage.setItem(roundKey(), JSON.stringify(round)); } catch {}
 }
@@ -275,12 +275,12 @@ $('start-form').addEventListener('submit', (event) => {
   host = true;
   levelKey = new FormData(event.target).get('level');
   if (!Rules.LEVELS[levelKey]) levelKey = 'classic';
-  try { localStorage.setItem('mm-level', levelKey); } catch {}
+  try { localStorage.setItem('code-level', levelKey); } catch {}
   code = newCode();
   connect();
 });
 try {
-  const saved = localStorage.getItem('mm-level');
+  const saved = localStorage.getItem('code-level') ?? localStorage.getItem('mm-level');
   const input = document.querySelector(`input[name="level"][value="${saved}"]`);
   if (input) input.checked = true;
 } catch {}
@@ -311,7 +311,7 @@ $('lost').addEventListener('cancel', (event) => event.preventDefault());
 if (navigator.share) {
   $('share-btn').hidden = false;
   $('share-btn').addEventListener('click', () => {
-    navigator.share({ title: 'MM', text: 'Can you crack my code?', url: inviteLink() }).catch(() => {});
+    navigator.share({ title: 'Code', text: 'Can you crack my code?', url: inviteLink() }).catch(() => {});
   });
 }
 
@@ -903,7 +903,7 @@ if ('CommandEvent' in window) {
 
 // ── Boot ─────────────────────────────────────────────────────────────────────
 setLobby('idle');
-// Opening an invite link in a tab that already has MM open only changes the hash.
+// Opening an invite link in a tab that already has Code open only changes the hash.
 addEventListener('hashchange', () => {
   if (!round && !link && location.hash.length > 1) join(location.hash);
 });
@@ -922,7 +922,7 @@ if (location.hash.length > 1) {
       schemeMeta.content = input.value;
       try {
         // Saved even when it's System: with nothing saved, the app starts in Light.
-        localStorage.setItem('mm-scheme', input.value);
+        localStorage.setItem('code-scheme', input.value);
       } catch { /* the choice still applies for this visit */ }
     });
   }

@@ -1,7 +1,7 @@
 {
   "id": "./",
-  "name": "MM",
-  "short_name": "MM",
+  "name": "Code",
+  "short_name": "Code",
   "description": "Crack the code before your friend cracks yours. Guesses travel directly between your two browsers.",
   "lang": "en",
   "start_url": "./",

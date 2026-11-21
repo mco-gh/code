@@ -2,7 +2,7 @@
 // the app is always current and nothing needs bumping on release. Each response is also
 // saved, and the cache answers when the network can't. The files below are saved at
 // install so the app opens offline straight away; anything else is saved on first use.
-const CACHE = "mm-v1";
+const CACHE = "code-v1";
 const PRECACHE = [
   "./",
   "./app.js",
@@ -32,7 +32,7 @@ self.addEventListener("install", (event) => {
 
 self.addEventListener("activate", (event) => {
   event.waitUntil((async () => {
-    for (const key of await caches.keys()) if (key.startsWith("mm-") && key !== CACHE) await caches.delete(key);
+    for (const key of await caches.keys()) if ((key.startsWith("code-") || key.startsWith("mm-")) && key !== CACHE) await caches.delete(key);
     await self.clients.claim();
   })());
 });

@@ -1,4 +1,4 @@
-// Building blocks for drawing MM: code pegs, the little scoring pegs, and rows.
+// Building blocks for drawing Code: code pegs, the little scoring pegs, and rows.
 import { COLOR_NAMES } from './rules.js';
 
 const el = (tag, className, text) => Object.assign(document.createElement(tag), { className, textContent: text ?? '' });
