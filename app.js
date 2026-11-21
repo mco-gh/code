@@ -3,6 +3,7 @@
 import * as Rules from './rules.js';
 import { peg, keys, row, slot } from './pegs.js';
 import { openLink, newCode, cleanCode } from './net.js';
+import { openBot, LEVELS as BOT_LEVELS } from './bot.js';
 
 const $ = (id) => document.getElementById(id);
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -62,7 +63,8 @@ for (const dots of document.querySelectorAll('.level-dots')) {
 }
 
 // ── State ────────────────────────────────────────────────────────────────────
-let link = null;          // the connection, or null
+let link = null;          // the connection (or the computer), or null
+let vsBot = null;         // the computer's level when playing it, else null
 let host = false;
 let code = '';
 let levelKey = 'classic';
@@ -177,6 +179,8 @@ function setLobby(state, error = '') {
 function show(screen) {
   $('lobby').hidden = screen !== 'lobby';
   $('game').hidden = screen !== 'game';
+  document.body.dataset.vs = vsBot ? 'bot' : 'friend';
+  $('them-name').textContent = vsBot ? 'Computer' : 'Opponent';
 }
 
 const inviteLink = () => `${location.origin}${location.pathname}#${code}`;
@@ -195,9 +199,10 @@ function connect() {
   if (!round) setLobby(host ? 'opening' : 'joining');
   // Ignore callbacks from a connection we have already replaced or dropped.
   const guard = (fn) => (...args) => { if (link === current) fn(...args); };
-  const current = openLink({
+  const current = (vsBot ? openBot : openLink)({
     code,
     host,
+    level: vsBot,
     on: {
       waiting: guard(() => { if (!round) setLobby('waiting'); }),
       open: guard(onPeer),
@@ -273,22 +278,29 @@ function toLobby(error = '') {
 $('start-form').addEventListener('submit', (event) => {
   event.preventDefault();
   host = true;
-  levelKey = new FormData(event.target).get('level');
+  const form = new FormData(event.target);
+  levelKey = form.get('level');
+  vsBot = event.submitter?.value === 'bot' ? (BOT_LEVELS[form.get('bot')] ? form.get('bot') : 'medium') : null;
+  if (vsBot) try { localStorage.setItem('code-bot', vsBot); } catch {}
   if (!Rules.LEVELS[levelKey]) levelKey = 'classic';
   try { localStorage.setItem('code-level', levelKey); } catch {}
-  code = newCode();
+  code = vsBot ? 'computer' : newCode();
   connect();
 });
 try {
   const saved = localStorage.getItem('code-level') ?? localStorage.getItem('mm-level');
   const input = document.querySelector(`input[name="level"][value="${saved}"]`);
   if (input) input.checked = true;
+  const bot = localStorage.getItem('code-bot');
+  const botInput = document.querySelector(`input[name="bot"][value="${bot}"]`);
+  if (botInput) botInput.checked = true;
 } catch {}
 
 function join(text) {
   const wanted = cleanCode(text);
   if (wanted.length !== 7) return setLobby('idle', 'A game code looks like abc-def.');
   host = false;
+  vsBot = null;
   code = wanted;
   history.replaceState(null, '', `#${code}`);
   connect();
@@ -584,7 +596,7 @@ function render() {
   $('quit').hidden = !(ph === 'play' || ph === 'wait') || round.quit.me;
 
   $('link-state').dataset.state = peerHere ? 'on' : 'off';
-  $('link-text').textContent = peerHere ? 'Connected' : host ? `Away. They can rejoin with ${code}` : 'Disconnected';
+  $('link-text').textContent = vsBot ? `🤖 ${BOT_LEVELS[vsBot].name}` : peerHere ? 'Connected' : host ? `Away. They can rejoin with ${code}` : 'Disconnected';
 
   $('over').hidden = ph !== 'over';
   $('over').classList.toggle('tucked', peeking);
@@ -603,7 +615,7 @@ function celebrate() {
   const tries = (n) => `${n} ${n === 1 ? 'try' : 'tries'}`;
   if (round.quit.me && !round.quit.them) {
     $('over-title').textContent = 'You gave up';
-    $('over-sub').textContent = 'Your opponent takes the round.';
+    $('over-sub').textContent = vsBot ? 'The computer takes the round.' : 'Your opponent takes the round.';
   } else if (round.quit.them && !round.quit.me) {
     $('over-title').textContent = 'You win! 🎉';
     $('over-sub').textContent = 'Your opponent gave up.';

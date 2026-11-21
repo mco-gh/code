@@ -9,6 +9,7 @@ It is a static app with no build step: open `index.html` from any web server. Th
 - `rules.js`: scoring, levels, the code commitment and who has won
 - `pegs.js`: draws pegs, scoring pegs and rows
 - `net.js`, `ice.js`: the link between the two browsers
+- `bot.js`: the computer opponent (Easy, Medium or Hard), which stands in for the link: it hides a code, scores your guesses and guesses yours
 - `app.js`: the lobby, rounds, rematches and score, chat, video and settings
 
 ## Fair play

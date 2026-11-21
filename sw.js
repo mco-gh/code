@@ -6,6 +6,7 @@ const CACHE = "code-v1";
 const PRECACHE = [
   "./",
   "./app.js",
+  "./bot.js",
   "./pegs.js",
   "./rules.js",
   "./icon.svg",
