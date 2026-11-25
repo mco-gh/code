@@ -74,7 +74,7 @@ let celebrated = false;
 let score = { me: 0, them: 0 };
 let draft = [];           // the row being filled in: colors or null
 let cursor = 0;           // the slot the next color goes in
-let peeking = false;      // the game-over card is tucked away to look at the board
+let overClosed = false;   // the result popup was closed for this round
 
 const level = () => Rules.LEVELS[round?.level ?? levelKey];
 
@@ -345,7 +345,7 @@ function startRound() {
 /** Put the round on screen. */
 function begin() {
   celebrated = false;
-  peeking = false;
+  overClosed = false;
   resetDraft();
   $('confetti').replaceChildren();
   show('game');
@@ -504,8 +504,13 @@ $('again').addEventListener('click', () => {
   toast('Asked your opponent’s browser for a new round…');
 });
 
-$('peek').addEventListener('click', () => {
-  peeking = !peeking;
+$('over-close').addEventListener('click', () => {
+  overClosed = true;
+  render();
+});
+
+$('show-result').addEventListener('click', () => {
+  overClosed = false;
   render();
 });
 
@@ -583,7 +588,7 @@ function render() {
   $('seat-me').classList.toggle('turn', guessing || making);
 
   let status = '';
-  if (ph === 'over') status = 'Round over.';
+  if (ph === 'over') status = '';      // the result has its own popup above the board
   else if (making) status = 'Pick a color for each peg. They won’t see it.';
   else if (ph === 'wait') status = 'Code locked in. Waiting for them to make theirs…';
   else if (me.solved) status = `You cracked it in ${me.tries}! Waiting to see if they can do better…`;
@@ -598,9 +603,8 @@ function render() {
   $('link-state').dataset.state = peerHere ? 'on' : 'off';
   $('link-text').textContent = vsBot ? `🤖 ${BOT_LEVELS[vsBot].name}` : peerHere ? 'Connected' : host ? `Away. They can rejoin with ${code}` : 'Disconnected';
 
-  $('over').hidden = ph !== 'over';
-  $('over').classList.toggle('tucked', peeking);
-  $('peek').textContent = peeking ? 'Show the result' : 'See the board';
+  $('over').hidden = ph !== 'over' || overClosed;
+  $('show-result').hidden = ph !== 'over' || !overClosed;
   if (ph === 'over') {
     if ($('quit-ask').open) $('quit-ask').close();
     celebrate();
@@ -617,10 +621,10 @@ function celebrate() {
     $('over-title').textContent = 'You gave up';
     $('over-sub').textContent = vsBot ? 'The computer takes the round.' : 'Your opponent takes the round.';
   } else if (round.quit.them && !round.quit.me) {
-    $('over-title').textContent = 'You win! 🎉';
+    $('over-title').textContent = 'You win!';
     $('over-sub').textContent = 'Your opponent gave up.';
   } else if (won) {
-    $('over-title').textContent = `Cracked it in ${tries(me.tries)}! 🎉`;
+    $('over-title').textContent = `Cracked it in ${tries(me.tries)}!`;
     $('over-sub').textContent = them.solved ? `They needed ${tries(them.tries)}.`
       : them.tries >= level().rows ? 'They couldn’t crack yours.'
       : `They hadn’t cracked yours after ${tries(them.tries)}.`;
@@ -629,14 +633,18 @@ function celebrate() {
     $('over-sub').textContent = me.solved ? `You needed ${tries(me.tries)}. So close!`
       : `You hadn’t cracked theirs yet. Fancy another round?`;
   } else {
-    $('over-title').textContent = 'It’s a draw 🤝';
+    $('over-title').textContent = 'It’s a draw';
     $('over-sub').textContent = me.solved ? `You both needed ${tries(me.tries)}.` : 'Neither code got cracked.';
   }
   if (round.reveal && !round.reveal.honest) {
     $('over-sub').textContent += ' ⚠️ Their code doesn’t match the scores they gave.';
   }
+  $('over').dataset.outcome = won ? 'won' : winner === null ? 'drawn' : 'lost';
+  $('over-icon').textContent = won ? '🏆' : winner === null ? '🤝' : '🏳️';
   if (celebrated) return;
   celebrated = true;
+  // On a short screen, bring the result (and the board under it) into view.
+  requestAnimationFrame(() => $('over').scrollIntoView({ block: 'nearest' }));
   const confetti = $('confetti');
   confetti.replaceChildren();
   if (!won) return;
